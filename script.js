@@ -7,11 +7,10 @@ async function fetchEvents() {
   const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${now}&orderBy=startTime&singleEvents=true&maxResults=50`;
 
   const response = await fetch(url);
-  const data = await response.json();
   if (!response.ok) {
-    const msg = data?.error?.message || response.statusText;
-    throw new Error(`${response.status}: ${msg}`);
+    throw new Error('Calendar API error');
   }
+  const data = await response.json();
   return data.items || [];
 }
 
@@ -110,7 +109,7 @@ async function init() {
     containers.forEach(({ keyword, id }) => {
       document.getElementById(id).innerHTML = `
         <span class="card-keyword">${keyword}</span>
-        <div class="card-error">Fehler beim Laden der Events.<br><small>${escapeHtml(err.message)}</small></div>
+        <div class="card-error">Fehler beim Laden der Events.</div>
       `;
     });
   }
